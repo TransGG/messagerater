@@ -118,14 +118,12 @@ def debug(text="", color="default", addTime=True, end=None, advanced=False):
 async def logMsg(_guild, msg: str):
     mongoURI = open("mongo.txt","r").read()
     cluster = MongoClient(mongoURI)
-    RaterDB = cluster["Rater"]
+    RaterDB = cluster["RaterDB"]
     collection = RaterDB["guild_info"]
     query = {"guild_id": _guild.id}
-    guild = collection.find(query)
-    try:
-        guild = guild[0]
-    except IndexError:
-        debug("Not enough data is configured to log a message in the logging channel! Please fix this with `/editguildinfo`!",color="red")
+    guild = collection.find_one(query)
+    if guild is None:
+        debug("Couldn't find a guild with the ID of this server! Please fix this with `/config`!",color="red")
         return
     _log_channel = guild["log_channel"]
     log_channel = _guild.get_channel(_log_channel)
