@@ -15,7 +15,7 @@ mongoURI = open("mongo.txt","r").read()
 cluster = MongoClient(mongoURI)
 RaterDB = cluster["RaterDB"]
 
-version = "1.0.0"
+version = "1.0.1"
 
 intents = discord.Intents.default()
 intents.message_content = True
@@ -40,6 +40,7 @@ client = Bot(
 @client.event
 async def on_ready():
     print(f"[#] Logged in as {client.user}, in version {version}")#,color="green")
+    await client.tree.sync()
     # await client.logChannel.send(f":white_check_mark: **Started ChannelTracker** in version {version}")
 
 @client.event
